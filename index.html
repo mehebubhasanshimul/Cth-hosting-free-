@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CTH HOSTING — Private File Hosting</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+:root{
+  --bg:#05070d;
+  --card:rgba(13,18,30,.82);
+  --card2:rgba(18,25,40,.75);
+  --border:rgba(255,255,255,.09);
+  --text:#f5f7ff;
+  --muted:#8d98ad;
+  --cyan:#00eaff;
+  --purple:#8b5cf6;
+  --pink:#ff2bd6;
+  --green:#32e875;
+  --danger:#ff5572;
+}
+
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 15% 10%,rgba(0,234,255,.13),transparent 28%),
+    radial-gradient(circle at 85% 20%,rgba(139,92,246,.14),transparent 30%),
+    radial-gradient(circle at 50% 100%,rgba(255,43,214,.08),transparent 35%),
+    var(--bg);
+  color:var(--text);
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  overflow-x:hidden;
+}
+
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:45px 45px;
+  mask-image:linear-gradient(to bottom,black,transparent);
+}
+
+button,input{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* AUTH */
+
+.auth-page{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:25px;
+}
+
+.auth-wrap{
+  width:100%;
+  max-width:460px;
+  position:relative;
+}
+
+.logo{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.logo-icon{
+  width:70px;
+  height:70px;
+  margin:auto;
+  border-radius:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  font-weight:900;
+  background:linear-gradient(135deg,var(--cyan),var(--purple),var(--pink));
+  box-shadow:
+    0 0 35px rgba(0,234,255,.22),
+    0 0 70px rgba(139,92,246,.12);
+}
+
+.logo h1{
+  margin-top:15px;
+  font-size:32px;
+  letter-spacing:2px;
+}
+
+.logo p{
+  color:var(--muted);
+  margin-top:5px;
+}
+
+.auth-card{
+  background:var(--card);
+  backdrop-filter:blur(24px);
+  border:1px solid var(--border);
+  border-radius:25px;
+  padding:28px;
+  box-shadow:0 25px 90px rgba(0,0,0,.4);
+}
+
+.tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  padding:5px;
+  background:rgba(255,255,255,.04);
+  border-radius:14px;
+  margin-bottom:24px;
+}
+
+.tab{
+  border:0;
+  color:var(--muted);
+  background:transparent;
+  padding:12px;
+  border-radius:10px;
+}
+
+.tab.active{
+  color:white;
+  background:rgba(0,234,255,.12);
+  box-shadow:inset 0 0 0 1px rgba(0,234,255,.15);
+}
+
+.field{
+  margin-bottom:15px;
+}
+
+.field label{
+  display:block;
+  color:#aeb8ca;
+  font-size:13px;
+  margin-bottom:7px;
+}
+
+.field input{
+  width:100%;
+  padding:14px 15px;
+  border-radius:13px;
+  border:1px solid var(--border);
+  outline:none;
+  color:white;
+  background:rgba(255,255,255,.045);
+  transition:.2s;
+}
+
+.field input:focus{
+  border-color:rgba(0,234,255,.6);
+  box-shadow:0 0 0 3px rgba(0,234,255,.08);
+}
+
+.primary{
+  width:100%;
+  border:0;
+  padding:14px;
+  border-radius:13px;
+  color:#031016;
+  font-weight:800;
+  background:linear-gradient(90deg,var(--cyan),#65f6ff);
+  box-shadow:0 10px 30px rgba(0,234,255,.16);
+  transition:.2s;
+}
+
+.primary:hover{
+  transform:translateY(-1px);
+  box-shadow:0 14px 35px rgba(0,234,255,.25);
+}
+
+.note{
+  margin-top:15px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.6;
+  text-align:center;
+}
+
+/* APP */
+
+.app{
+  min-height:100vh;
+}
+
+.navbar{
+  height:75px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 5%;
+  border-bottom:1px solid var(--border);
+  background:rgba(5,7,13,.72);
+  backdrop-filter:blur(20px);
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.brand-icon{
+  width:42px;
+  height:42px;
+  border-radius:13px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  background:linear-gradient(135deg,var(--cyan),var(--purple));
+}
+
+.brand-name{
+  font-weight:900;
+  letter-spacing:1px;
+}
+
+.brand-name small{
+  display:block;
+  font-size:10px;
+  color:var(--muted);
+  font-weight:500;
+  letter-spacing:0;
+}
+
+.user-area{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.user-name{
+  color:#d9e0ef;
+  font-size:13px;
+}
+
+.logout{
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.04);
+  color:#cbd4e5;
+  padding:9px 13px;
+  border-radius:10px;
+}
+
+.container{
+  width:min(1100px,92%);
+  margin:35px auto 70px;
+}
+
+.hero{
+  margin-bottom:25px;
+}
+
+.hero h2{
+  font-size:clamp(27px,5vw,45px);
+  line-height:1.1;
+}
+
+.hero h2 span{
+  background:linear-gradient(90deg,var(--cyan),var(--purple),var(--pink));
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.hero p{
+  color:var(--muted);
+  margin-top:10px;
+}
+
+/* STATS */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.stat{
+  padding:18px;
+  border-radius:18px;
+  background:var(--card);
+  border:1px solid var(--border);
+}
+
+.stat .icon{
+  font-size:22px;
+}
+
+.stat strong{
+  display:block;
+  margin-top:10px;
+  font-size:23px;
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:12px;
+}
+
+/* UPLOAD */
+
+.upload-card{
+  position:relative;
+  padding:35px;
+  border-radius:22px;
+  border:1px dashed rgba(0,234,255,.35);
+  background:
+    radial-gradient(circle at 50% 0%,rgba(0,234,255,.09),transparent 45%),
+    var(--card);
+  text-align:center;
+  overflow:hidden;
+}
+
+.upload-card.drag{
+  border-color:var(--cyan);
+  background:rgba(0,234,255,.07);
+}
+
+.upload-icon{
+  width:65px;
+  height:65px;
+  margin:auto;
+  border-radius:20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  background:rgba(0,234,255,.08);
+  border:1px solid rgba(0,234,255,.2);
+}
+
+.upload-card h3{
+  margin-top:16px;
+}
+
+.upload-card p{
+  color:var(--muted);
+  font-size:13px;
+  margin:7px 0 18px;
+}
+
+.file-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:12px 22px;
+  border-radius:12px;
+  color:#031016;
+  font-weight:800;
+  background:linear-gradient(90deg,var(--cyan),#7af8ff);
+  cursor:pointer;
+}
+
+#fileInput{
+  display:none;
+}
+
+.progress-wrap{
+  margin-top:20px;
+  display:none;
+}
+
+.progress{
+  height:7px;
+  border-radius:10px;
+  background:rgba(255,255,255,.07);
+  overflow:hidden;
+}
+
+.progress-bar{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,var(--cyan),var(--purple));
+  transition:.2s;
+}
+
+/* FILES */
+
+.files-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin:30px 0 14px;
+}
+
+.files-head h3{
+  font-size:20px;
+}
+
+.search{
+  max-width:280px;
+  width:100%;
+  padding:11px 14px;
+  border-radius:11px;
+  border:1px solid var(--border);
+  outline:none;
+  background:rgba(255,255,255,.04);
+  color:white;
+}
+
+.file-list{
+  display:grid;
+  gap:10px;
+}
+
+.file{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:15px;
+  border-radius:16px;
+  background:var(--card);
+  border:1px solid var(--border);
+}
+
+.file-icon{
+  width:45px;
+  height:45px;
+  flex:none;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(139,92,246,.1);
+  font-size:21px;
+}
+
+.file-info{
+  flex:1;
+  min-width:0;
+}
+
+.file-name{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-weight:700;
+}
+
+.file-meta{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:4px;
+}
+
+.file-actions{
+  display:flex;
+  gap:7px;
+}
+
+.action{
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.04);
+  color:#d9e2f2;
+  border-radius:9px;
+  padding:8px 10px;
+}
+
+.action.delete{
+  color:#ff758c;
+}
+
+.empty{
+  text-align:center;
+  color:var(--muted);
+  padding:45px 20px;
+  border:1px dashed var(--border);
+  border-radius:18px;
+}
+
+/* FOOTER */
+
+footer{
+  text-align:center;
+  color:#657085;
+  font-size:12px;
+  padding:25px;
+}
+
+footer strong{
+  color:#9ba7bc;
+}
+
+/* TOAST */
+
+.toast{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  z-index:99;
+  max-width:350px;
+  padding:13px 16px;
+  border-radius:13px;
+  background:#121827;
+  border:1px solid var(--border);
+  box-shadow:0 15px 40px rgba(0,0,0,.4);
+  transform:translateY(30px);
+  opacity:0;
+  pointer-events:none;
+  transition:.3s;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.toast.success{
+  border-color:rgba(50,232,117,.3);
+}
+
+.toast.error{
+  border-color:rgba(255,85,114,.35);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:700px){
+  .navbar{
+    padding:0 4%;
+  }
+
+  .user-name{
+    display:none;
+  }
+
+  .container{
+    width:92%;
+    margin-top:25px;
+  }
+
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+  .upload-card{
+    padding:28px 18px;
+  }
+
+  .files-head{
+    align-items:stretch;
+    flex-direction:column;
+  }
+
+  .search{
+    max-width:none;
+  }
+
+  .file{
+    align-items:flex-start;
+  }
+
+  .file-actions{
+    flex-direction:column;
+  }
+
+  .action{
+    padding:7px 9px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- AUTH PAGE -->
+<section id="authPage" class="auth-page">
+
+  <div class="auth-wrap">
+
+    <div class="logo">
+      <div class="logo-icon">CTH</div>
+      <h1>CTH HOSTING</h1>
+      <p>Private • Secure • Fast File Hosting</p>
+    </div>
+
+    <div class="auth-card">
+
+      <div class="tabs">
+        <button id="loginTab" class="tab active" onclick="showLogin()">
+          Login
+        </button>
+
+        <button id="registerTab" class="tab" onclick="showRegister()">
+          Register
+        </button>
+      </div>
+
+      <!-- LOGIN -->
+
+      <form id="loginForm">
+
+        <div class="field">
+          <label>Email</label>
+          <input
+            id="loginEmail"
+            type="email"
+            placeholder="you@example.com"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label>Password</label>
+          <input
+            id="loginPassword"
+            type="password"
+            placeholder="••••••••"
+            required
+          >
+        </div>
+
+        <button class="primary" type="submit">
+          🔐 Login to CTH
+        </button>
+
+      </form>
+
+      <!-- REGISTER -->
+
+      <form id="registerForm" class="hidden">
+
+        <div class="field">
+          <label>Username</label>
+
+          <input
+            id="registerUsername"
+            type="text"
+            minlength="3"
+            maxlength="24"
+            pattern="[A-Za-z0-9_]+"
+            placeholder="shadowjoker"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label>Email</label>
+
+          <input
+            id="registerEmail"
+            type="email"
+            placeholder="you@example.com"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label>Password</label>
+
+          <input
+            id="registerPassword"
+            type="password"
+            minlength="6"
+            placeholder="Minimum 6 characters"
+            required
+          >
+        </div>
+
+        <button class="primary" type="submit">
+          🚀 Create Account
+        </button>
+
+      </form>
+
+      <div class="note">
+        Your files are private and protected by Supabase Row Level Security.
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- APP -->
+
+<section id="app" class="app hidden">
+
+  <nav class="navbar">
+
+    <div class="brand">
+
+      <div class="brand-icon">
+        CTH
+      </div>
+
+      <div class="brand-name">
+        CTH HOSTING
+        <small>Private Cloud Storage</small>
+      </div>
+
+    </div>
+
+    <div class="user-area">
+
+      <span id="userName" class="user-name"></span>
+
+      <button class="logout" onclick="logout()">
+        Logout
+      </button>
+
+    </div>
+
+  </nav>
+
+
+  <main class="container">
+
+    <div class="hero">
+
+      <h2>
+        Your <span>Private Cloud</span>
+      </h2>
+
+      <p>
+        Upload, manage and securely download your files.
+      </p>
+
+    </div>
+
+
+    <div class="stats">
+
+      <div class="stat">
+        <div class="icon">📁</div>
+        <strong id="fileCount">0</strong>
+        <span>Total Files</span>
+      </div>
+
+      <div class="stat">
+        <div class="icon">💾</div>
+        <strong id="totalSize">0 B</strong>
+        <span>Total Storage Used</span>
+      </div>
+
+      <div class="stat">
+        <div class="icon">🔐</div>
+        <strong>PRIVATE</strong>
+        <span>Storage Security</span>
+      </div>
+
+    </div>
+
+
+    <div
+      id="dropZone"
+      class="upload-card"
+    >
+
+      <div class="upload-icon">
+        ⬆️
+      </div>
+
+      <h3>Upload your files</h3>
+
+      <p>
+        ZIP, PDF, images, videos, documents and more
+      </p>
+
+      <label class="file-btn">
+
+        📤 Choose File
+
+        <input
+          id="fileInput"
+          type="file"
+        >
+
+      </label>
+
+      <div id="progressWrap" class="progress-wrap">
+
+        <div class="progress">
+
+          <div
+            id="progressBar"
+            class="progress-bar"
+          ></div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="files-head">
+
+      <h3>📂 My Files</h3>
+
+      <input
+        id="search"
+        class="search"
+        type="search"
+        placeholder="Search files..."
+        oninput="renderFiles()"
+      >
+
+    </div>
+
+
+    <div id="fileList" class="file-list"></div>
+
+  </main>
+
+
+  <footer>
+    CTH HOSTING © 2026 • Secure File Hosting
+    <br>
+    <strong>POWERED BY SHADOW JOKER</strong>
+  </footer>
+
+</section>
+
+
+<div id="toast" class="toast"></div>
+
+
+<script>
+
+/* =========================================================
+   CTH HOSTING
+   SUPABASE CONFIGURATION
+   ========================================================= */
+
+const SUPABASE_URL =
+  
+https://jxrbfervrwxtntehfdgs.supabase.co
+const SUPABASE_ANON_KEY =
+  sb_publishable_LIQNXKQ_L8HCeFzDLsSyrw_KI1ppPgB
+
+
+const supabaseClient =
+  supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
+
+/* =========================================================
+   GLOBAL STATE
+   ========================================================= */
+
+let currentUser = null;
+let myFiles = [];
+
+
+/* =========================================================
+   UI HELPERS
+   ========================================================= */
+
+function toast(message,type="success"){
+
+  const el =
+    document.getElementById("toast");
+
+  el.textContent = message;
+
+  el.className =
+    "toast show " + type;
+
+  setTimeout(()=>{
+    el.className = "toast";
+  },3500);
+}
+
+
+function showLogin(){
+
+  document
+    .getElementById("loginForm")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("registerForm")
+    .classList.add("hidden");
+
+  document
+    .getElementById("loginTab")
+    .classList.add("active");
+
+  document
+    .getElementById("registerTab")
+    .classList.remove("active");
+}
+
+
+function showRegister(){
+
+  document
+    .getElementById("loginForm")
+    .classList.add("hidden");
+
+  document
+    .getElementById("registerForm")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("loginTab")
+    .classList.remove("active");
+
+  document
+    .getElementById("registerTab")
+    .classList.add("active");
+}
+
+
+function formatBytes(bytes){
+
+  if(!bytes) return "0 B";
+
+  const units =
+    ["B","KB","MB","GB","TB"];
+
+  const i =
+    Math.floor(
+      Math.log(bytes)/Math.log(1024)
+    );
+
+  return (
+    parseFloat(
+      (bytes/Math.pow(1024,i)).toFixed(2)
+    )
+    + " "
+    + units[i]
+  );
+}
+
+
+function fileIcon(name){
+
+  const ext =
+    name.split(".").pop().toLowerCase();
+
+  if(["jpg","jpeg","png","gif","webp","svg"].includes(ext))
+    return "🖼️";
+
+  if(["mp4","mkv","mov","avi","webm"].includes(ext))
+    return "🎬";
+
+  if(["zip","rar","7z","tar","gz"].includes(ext))
+    return "📦";
+
+  if(["pdf"].includes(ext))
+    return "📕";
+
+  if(["html","css","js","ts","tsx","jsx","json","php","py"].includes(ext))
+    return "💻";
+
+  if(["apk"].includes(ext))
+    return "📱";
+
+  if(["mp3","wav","ogg"].includes(ext))
+    return "🎵";
+
+  return "📄";
+}
+
+
+/* =========================================================
+   AUTH
+   ========================================================= */
+
+async function checkSession(){
+
+  const {
+    data:{
+      session
+    }
+  } =
+  await supabaseClient
+    .auth
+    .getSession();
+
+  if(session){
+
+    currentUser =
+      session.user;
+
+    await openApp();
+
+  }else{
+
+    openAuth();
+
+  }
+}
+
+
+function openAuth(){
+
+  document
+    .getElementById("authPage")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("app")
+    .classList.add("hidden");
+}
+
+
+async function openApp(){
+
+  document
+    .getElementById("authPage")
+    .classList.add("hidden");
+
+  document
+    .getElementById("app")
+    .classList.remove("hidden");
+
+  await loadProfile();
+  await loadFiles();
+}
+
+
+/* =========================================================
+   REGISTER
+   ========================================================= */
+
+document
+  .getElementById("registerForm")
+  .addEventListener(
+    "submit",
+    async function(e){
+
+      e.preventDefault();
+
+      const username =
+        document
+        .getElementById("registerUsername")
+        .value
+        .trim()
+        .toLowerCase();
+
+      const email =
+        document
+        .getElementById("registerEmail")
+        .value
+        .trim();
+
+      const password =
+        document
+        .getElementById("registerPassword")
+        .value;
+
+
+      if(!/^[a-z0-9_]+$/.test(username)){
+
+        toast(
+          "Username can contain only letters, numbers and underscore.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      /*
+        Check username before creating auth account.
+      */
+
+      const {
+        data:existing,
+        error:checkError
+      } =
+      await supabaseClient
+        .from("profiles")
+        .select("id")
+        .eq("username",username)
+        .maybeSingle();
+
+
+      if(checkError){
+
+        toast(
+          checkError.message,
+          "error"
+        );
+
+        return;
+      }
+
+
+      if(existing){
+
+        toast(
+          "This username is already taken.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      const {
+        data,
+        error
+      } =
+      await supabaseClient
+        .auth
+        .signUp({
+
+          email,
+          password,
+
+          options:{
+            data:{
+              username
+            }
+          }
+
+        });
+
+
+      if(error){
+
+        toast(
+          error.message,
+          "error"
+        );
+
+        return;
+      }
+
+
+      /*
+        If email confirmation is disabled,
+        session will be immediately available.
+      */
+
+      if(data.session){
+
+        currentUser =
+          data.user;
+
+        await createProfile(
+          data.user.id,
+          username
+        );
+
+        toast(
+          "Account created successfully!"
+        );
+
+        await openApp();
+
+      }else{
+
+        toast(
+          "Account created. Check your email to confirm your account."
+        );
+
+        showLogin();
+
+      }
+
+    }
+  );
+
+
+/* =========================================================
+   CREATE PROFILE
+   ========================================================= */
+
+async function createProfile(userId,username){
+
+  const {
+    error
+  } =
+  await supabaseClient
+    .from("profiles")
+    .insert({
+
+      id:userId,
+      username:username
+
+    });
+
+
+  if(error){
+
+    /*
+      The SQL trigger may already create it.
+      Duplicate profile is therefore ignored.
+    */
+
+    if(!error.message.toLowerCase().includes("duplicate")){
+
+      console.error(error);
+
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   LOGIN
+   ========================================================= */
+
+document
+  .getElementById("loginForm")
+  .addEventListener(
+    "submit",
+    async function(e){
+
+      e.preventDefault();
+
+      const email =
+        document
+        .getElementById("loginEmail")
+        .value
+        .trim();
+
+      const password =
+        document
+        .getElementById("loginPassword")
+        .value;
+
+
+      const {
+        data,
+        error
+      } =
+      await supabaseClient
+        .auth
+        .signInWithPassword({
+
+          email,
+          password
+
+        });
+
+
+      if(error){
+
+        toast(
+          error.message,
+          "error"
+        );
+
+        return;
+      }
+
+
+      currentUser =
+        data.user;
+
+      toast(
+        "Login successful!"
+      );
+
+      await openApp();
+
+    }
+  );
+
+
+/* =========================================================
+   PROFILE
+   ========================================================= */
+
+async function loadProfile(){
+
+  if(!currentUser) return;
+
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+    .from("profiles")
+    .select("username")
+    .eq("id",currentUser.id)
+    .single();
+
+
+  if(!error && data){
+
+    document
+      .getElementById("userName")
+      .textContent =
+      "@" + data.username;
+
+  }else{
+
+    document
+      .getElementById("userName")
+      .textContent =
+      currentUser.email;
+
+  }
+
+}
+
+
+/* =========================================================
+   FILE UPLOAD
+   ========================================================= */
+
+const fileInput =
+  document.getElementById("fileInput");
+
+fileInput.addEventListener(
+  "change",
+  function(){
+
+    if(this.files[0]){
+      uploadFile(this.files[0]);
+    }
+
+  }
+);
+
+
+const dropZone =
+  document.getElementById("dropZone");
+
+
+dropZone.addEventListener(
+  "dragover",
+  function(e){
+
+    e.preventDefault();
+
+    dropZone.classList.add("drag");
+
+  }
+);
+
+
+dropZone.addEventListener(
+  "dragleave",
+  function(){
+
+    dropZone.classList.remove("drag");
+
+  }
+);
+
+
+dropZone.addEventListener(
+  "drop",
+  function(e){
+
+    e.preventDefault();
+
+    dropZone.classList.remove("drag");
+
+    const file =
+      e.dataTransfer.files[0];
+
+    if(file){
+      uploadFile(file);
+    }
+
+  }
+);
+
+
+async function uploadFile(file){
+
+  if(!currentUser){
+
+    toast(
+      "Please login first.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  /*
+    Client-side limit:
+    50 MB
+  */
+
+  const MAX_SIZE =
+    50 * 1024 * 1024;
+
+
+  if(file.size > MAX_SIZE){
+
+    toast(
+      "Maximum file size is 50 MB.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const progressWrap =
+    document.getElementById("progressWrap");
+
+  const progressBar =
+    document.getElementById("progressBar");
+
+
+  progressWrap.style.display =
+    "block";
+
+  progressBar.style.width =
+    "10%";
+
+
+  /*
+    Generate safe unique storage path.
+
+    IMPORTANT:
+    Every user's files are placed inside:
+    USER_UUID/
+  */
+
+  const safeName =
+    file.name
+      .replace(/[^\w.\-() ]/g,"_")
+      .replace(/\s+/g,"_");
+
+
+  const uniqueName =
+    crypto.randomUUID()
+    + "-"
+    + safeName;
+
+
+  const storagePath =
+    currentUser.id
+    + "/"
+    + uniqueName;
+
+
+  progressBar.style.width =
+    "30%";
+
+
+  const {
+    error:uploadError
+  } =
+  await supabaseClient
+    .storage
+    .from("files")
+    .upload(
+      storagePath,
+      file,
+      {
+        cacheControl:"3600",
+        upsert:false
+      }
+    );
+
+
+  if(uploadError){
+
+    progressWrap.style.display =
+      "none";
+
+    toast(
+      uploadError.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  progressBar.style.width =
+    "75%";
+
+
+  const {
+    error:dbError
+  } =
+  await supabaseClient
+    .from("files")
+    .insert({
+
+      user_id:currentUser.id,
+
+      file_name:file.name,
+
+      file_path:storagePath,
+
+      file_size:file.size,
+
+      mime_type:
+        file.type || "application/octet-stream"
+
+    });
+
+
+  if(dbError){
+
+    /*
+      Rollback storage upload
+      if database insert fails.
+    */
+
+    await supabaseClient
+      .storage
+      .from("files")
+      .remove([storagePath]);
+
+
+    progressWrap.style.display =
+      "none";
+
+    toast(
+      dbError.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  progressBar.style.width =
+    "100%";
+
+
+  setTimeout(()=>{
+
+    progressWrap.style.display =
+      "none";
+
+    progressBar.style.width =
+      "0%";
+
+  },700);
+
+
+  toast(
+    "File uploaded successfully!"
+  );
+
+
+  fileInput.value = "";
+
+  await loadFiles();
+
+}
+
+
+/* =========================================================
+   LOAD FILES
+   ========================================================= */
+
+async function loadFiles(){
+
+  if(!currentUser) return;
+
+
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+    .from("files")
+    .select("*")
+    .eq("user_id",currentUser.id)
+    .order(
+      "created_at",
+      {
+        ascending:false
+      }
+    );
+
+
+  if(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  myFiles =
+    data || [];
+
+
+  updateStats();
+
+  renderFiles();
+
+}
+
+
+/* =========================================================
+   STATS
+   ========================================================= */
+
+function updateStats(){
+
+  const total =
+    myFiles.reduce(
+      (sum,file)=>
+        sum + Number(file.file_size || 0),
+      0
+    );
+
+
+  document
+    .getElementById("fileCount")
+    .textContent =
+    myFiles.length;
+
+
+  document
+    .getElementById("totalSize")
+    .textContent =
+    formatBytes(total);
+
+}
+
+
+/* =========================================================
+   RENDER FILES
+   ========================================================= */
+
+function renderFiles(){
+
+  const list =
+    document.getElementById("fileList");
+
+  const search =
+    document
+      .getElementById("search")
+      .value
+      .toLowerCase()
+      .trim();
+
+
+  const filtered =
+    myFiles.filter(file=>
+      file.file_name
+        .toLowerCase()
+        .includes(search)
+    );
+
+
+  if(!filtered.length){
+
+    list.innerHTML = `
+      <div class="empty">
+        <div style="font-size:35px;margin-bottom:10px">
+          📂
+        </div>
+
+        No files found.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  list.innerHTML =
+    filtered.map(file=>{
+
+      return `
+
+        <div class="file">
+
+          <div class="file-icon">
+            ${fileIcon(file.file_name)}
+          </div>
+
+          <div class="file-info">
+
+            <div
+              class="file-name"
+              title="${escapeHtml(file.file_name)}"
+            >
+              ${escapeHtml(file.file_name)}
+            </div>
+
+            <div class="file-meta">
+              ${formatBytes(file.file_size)}
+              •
+              ${new Date(file.created_at).toLocaleString()}
+            </div>
+
+          </div>
+
+          <div class="file-actions">
+
+            <button
+              class="action"
+              onclick="downloadFile('${file.id}')"
+            >
+              ⬇️
+            </button>
+
+            <button
+              class="action delete"
+              onclick="deleteFile('${file.id}')"
+            >
+              🗑️
+            </button>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+}
+
+
+/* =========================================================
+   DOWNLOAD
+   ========================================================= */
+
+async function downloadFile(id){
+
+  const file =
+    myFiles.find(
+      f=>f.id === id
+    );
+
+
+  if(!file){
+
+    toast(
+      "File not found.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  /*
+    Create temporary signed URL.
+    It expires after 60 seconds.
+  */
+
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+    .storage
+    .from("files")
+    .createSignedUrl(
+      file.file_path,
+      60
+    );
+
+
+  if(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  window.open(
+    data.signedUrl,
+    "_blank"
+  );
+
+}
+
+
+/* =========================================================
+   DELETE
+   ========================================================= */
+
+async function deleteFile(id){
+
+  const file =
+    myFiles.find(
+      f=>f.id === id
+    );
+
+
+  if(!file) return;
+
+
+  const confirmed =
+    confirm(
+      `Delete "${file.file_name}"?`
+    );
+
+
+  if(!confirmed) return;
+
+
+  /*
+    Delete storage object first.
+  */
+
+  const {
+    error:storageError
+  } =
+  await supabaseClient
+    .storage
+    .from("files")
+    .remove([
+      file.file_path
+    ]);
+
+
+  if(storageError){
+
+    toast(
+      storageError.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  /*
+    Delete database record.
+  */
+
+  const {
+    error:dbError
+  } =
+  await supabaseClient
+    .from("files")
+    .delete()
+    .eq("id",id)
+    .eq("user_id",currentUser.id);
+
+
+  if(dbError){
+
+    toast(
+      dbError.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  toast(
+    "File deleted."
+  );
+
+
+  await loadFiles();
+
+}
+
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+async function logout(){
+
+  await supabaseClient
+    .auth
+    .signOut();
+
+  currentUser = null;
+
+  myFiles = [];
+
+  openAuth();
+
+}
+
+
+/* =========================================================
+   XSS SAFE TEXT
+   ========================================================= */
+
+function escapeHtml(value){
+
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================================================
+   AUTH STATE LISTENER
+   ========================================================= */
+
+supabaseClient
+  .auth
+  .onAuthStateChange(
+    async (event,session)=>{
+
+      if(
+        session &&
+        !currentUser
+      ){
+
+        currentUser =
+          session.user;
+
+        await openApp();
+
+      }
+
+      if(
+        event === "SIGNED_OUT"
+      ){
+
+        currentUser = null;
+
+        openAuth();
+
+      }
+
+    }
+  );
+
+
+/* =========================================================
+   START
+   ========================================================= */
+
+checkSession();
+
+</script>
+
+</body>
+            </html>
