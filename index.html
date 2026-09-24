@@ -2,40 +2,39 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>CTH HOSTING — SHADOW JOKER</title>
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+>
+
+<title>CTH HOSTING</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
 *{
+    box-sizing:border-box;
     margin:0;
     padding:0;
-    box-sizing:border-box;
 }
 
 :root{
     --bg:#05070d;
-    --card:rgba(13,17,29,.82);
-    --card2:rgba(20,25,42,.78);
+    --card:rgba(13,18,31,.78);
+    --border:rgba(0,242,254,.16);
     --cyan:#00f2fe;
-    --blue:#00aaff;
-    --purple:#9b5cff;
+    --purple:#8b5cf6;
     --pink:#ff007f;
     --green:#00ff9d;
-    --red:#ff3b6b;
+    --red:#ff4d6d;
     --text:#f4f7ff;
-    --muted:#8f9bb3;
-    --border:rgba(0,242,254,.16);
+    --muted:#8993a8;
 }
 
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-    min-height:100vh;
+html,body{
+    min-height:100%;
     font-family:
         Inter,
         system-ui,
@@ -43,398 +42,380 @@ body{
         BlinkMacSystemFont,
         "Segoe UI",
         sans-serif;
-    color:var(--text);
     background:
         radial-gradient(circle at 15% 10%,rgba(0,242,254,.10),transparent 30%),
-        radial-gradient(circle at 85% 20%,rgba(155,92,255,.12),transparent 32%),
-        radial-gradient(circle at 50% 90%,rgba(255,0,127,.07),transparent 35%),
-        #05070d;
+        radial-gradient(circle at 85% 20%,rgba(139,92,246,.12),transparent 30%),
+        radial-gradient(circle at 50% 100%,rgba(255,0,127,.08),transparent 35%),
+        var(--bg);
+    color:var(--text);
+}
+
+body{
     overflow-x:hidden;
 }
 
-body::before{
-    content:"";
+button,
+input{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.hidden{
+    display:none !important;
+}
+
+
+/* ================================
+   BACKGROUND
+================================ */
+
+.background{
     position:fixed;
     inset:0;
     pointer-events:none;
-    background:
-        linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
-    background-size:42px 42px;
-    mask-image:linear-gradient(to bottom,black,transparent);
-    z-index:-1;
+    overflow:hidden;
+    z-index:0;
 }
 
-/* ==============================
-   AUTH
-============================== */
+.orb{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(90px);
+    opacity:.18;
+}
 
-#authPage{
-    min-height:100vh;
+.orb.one{
+    width:300px;
+    height:300px;
+    background:var(--cyan);
+    left:-100px;
+    top:-100px;
+}
+
+.orb.two{
+    width:350px;
+    height:350px;
+    background:var(--purple);
+    right:-120px;
+    top:20%;
+}
+
+.orb.three{
+    width:300px;
+    height:300px;
+    background:var(--pink);
+    bottom:-120px;
+    left:35%;
+}
+
+
+/* ================================
+   MAIN
+================================ */
+
+.container{
+    position:relative;
+    z-index:1;
+    width:min(1100px,94%);
+    margin:auto;
+    padding:30px 0 50px;
+}
+
+
+/* ================================
+   HEADER
+================================ */
+
+.header{
     display:flex;
-    justify-content:center;
     align-items:center;
-    padding:25px;
+    justify-content:space-between;
+    gap:20px;
+    margin-bottom:25px;
 }
 
-.auth-wrapper{
-    width:100%;
-    max-width:480px;
-}
-
-.logo-area{
-    text-align:center;
-    margin-bottom:28px;
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
 }
 
 .logo-icon{
-    width:82px;
-    height:82px;
-    margin:auto;
-    border-radius:24px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:35px;
-    font-weight:900;
-    color:#fff;
+    width:48px;
+    height:48px;
+    display:grid;
+    place-items:center;
+    border-radius:15px;
+
     background:
-        linear-gradient(135deg,var(--cyan),var(--purple),var(--pink));
-    box-shadow:
-        0 0 30px rgba(0,242,254,.28),
-        0 0 70px rgba(155,92,255,.16);
-    animation:floatLogo 3s ease-in-out infinite;
-}
+        linear-gradient(
+            135deg,
+            rgba(0,242,254,.18),
+            rgba(139,92,246,.18)
+        );
 
-@keyframes floatLogo{
-    0%,100%{
-        transform:translateY(0);
-    }
-    50%{
-        transform:translateY(-7px);
-    }
-}
-
-.logo-area h1{
-    margin-top:17px;
-    font-size:34px;
-    letter-spacing:2px;
-    font-weight:900;
-}
-
-.logo-area h1 span{
-    background:linear-gradient(90deg,var(--cyan),var(--purple),var(--pink));
-    -webkit-background-clip:text;
-    color:transparent;
-}
-
-.logo-area p{
-    margin-top:7px;
-    color:var(--muted);
-    font-size:13px;
-}
-
-.auth-card{
-    position:relative;
-    overflow:hidden;
-    padding:30px;
-    border-radius:26px;
     border:1px solid var(--border);
-    background:linear-gradient(
-        145deg,
-        rgba(16,21,37,.90),
-        rgba(7,10,18,.88)
-    );
-    backdrop-filter:blur(25px);
+
     box-shadow:
-        0 25px 80px rgba(0,0,0,.45),
-        inset 0 1px rgba(255,255,255,.04);
+        0 0 30px rgba(0,242,254,.10);
 }
 
-.auth-card::before{
-    content:"";
-    position:absolute;
-    width:250px;
-    height:250px;
-    border-radius:50%;
-    background:var(--cyan);
-    filter:blur(120px);
-    opacity:.07;
-    top:-100px;
-    right:-100px;
-}
-
-.open-badge{
-    display:inline-flex;
-    align-items:center;
-    gap:7px;
-    padding:8px 13px;
-    border-radius:100px;
-    color:var(--green);
-    background:rgba(0,255,157,.07);
-    border:1px solid rgba(0,255,157,.20);
-    font-size:12px;
-    font-weight:700;
-    margin-bottom:22px;
-}
-
-.open-dot{
-    width:7px;
-    height:7px;
-    border-radius:50%;
-    background:var(--green);
-    box-shadow:0 0 12px var(--green);
-}
-
-.field{
-    margin-bottom:17px;
-}
-
-.field label{
-    display:block;
-    margin-bottom:8px;
-    color:#b7c1d5;
-    font-size:13px;
-    font-weight:700;
-}
-
-.field input{
-    width:100%;
-    padding:15px 16px;
-    border-radius:14px;
-    outline:none;
-    color:#fff;
-    font-size:14px;
-    background:rgba(0,0,0,.25);
-    border:1px solid rgba(255,255,255,.09);
-    transition:.25s;
-}
-
-.field input:focus{
-    border-color:var(--cyan);
-    box-shadow:0 0 0 3px rgba(0,242,254,.08);
-}
-
-.primary{
-    width:100%;
-    border:0;
-    padding:15px;
-    border-radius:14px;
-    color:#fff;
+.logo-icon span{
     font-weight:900;
-    font-size:14px;
-    cursor:pointer;
-    background:linear-gradient(
-        90deg,
-        #0099ff,
-        #7657ff,
-        #df167d
-    );
-    box-shadow:0 12px 30px rgba(95,82,255,.20);
-    transition:.25s;
-}
-
-.primary:hover{
-    transform:translateY(-2px);
-    box-shadow:0 15px 35px rgba(0,242,254,.18);
-}
-
-.primary:active{
-    transform:scale(.98);
-}
-
-.auth-note{
-    margin-top:17px;
-    color:#748099;
-    font-size:11px;
-    line-height:1.7;
-    text-align:center;
-}
-
-.credit{
-    text-align:center;
-    margin-top:20px;
-    color:#69748b;
-    font-size:11px;
-}
-
-.credit strong{
     color:var(--cyan);
+    font-size:17px;
 }
 
-/* ==============================
-   APP
-============================== */
-
-#appPage{
-    display:none;
-    min-height:100vh;
+.logo h1{
+    font-size:22px;
+    letter-spacing:2px;
 }
+
+.logo p{
+    color:var(--muted);
+    font-size:11px;
+    margin-top:2px;
+    letter-spacing:1px;
+}
+
+
+/* ================================
+   CARD
+================================ */
+
+.card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:24px;
+
+    box-shadow:
+        0 25px 80px rgba(0,0,0,.35),
+        inset 0 1px rgba(255,255,255,.03);
+
+    backdrop-filter:blur(20px);
+}
+
+
+/* ================================
+   LOGIN
+================================ */
+
+.login-wrap{
+    min-height:80vh;
+    display:grid;
+    place-items:center;
+}
+
+.login{
+    width:min(480px,100%);
+    padding:35px;
+    text-align:center;
+}
+
+.login-logo{
+    width:80px;
+    height:80px;
+    margin:0 auto 22px;
+
+    display:grid;
+    place-items:center;
+
+    border-radius:25px;
+
+    border:1px solid rgba(0,242,254,.25);
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0,242,254,.15),
+            rgba(139,92,246,.08)
+        );
+
+    box-shadow:
+        0 0 50px rgba(0,242,254,.12);
+}
+
+.login-logo strong{
+    color:var(--cyan);
+    font-size:24px;
+    letter-spacing:2px;
+}
+
+.login h2{
+    font-size:30px;
+    margin-bottom:8px;
+}
+
+.login-sub{
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.7;
+    margin-bottom:25px;
+}
+
+.input-group{
+    text-align:left;
+    margin-bottom:15px;
+}
+
+.input-group label{
+    display:block;
+    color:#aeb7c9;
+    font-size:13px;
+    margin-bottom:8px;
+}
+
+.input{
+    width:100%;
+    height:54px;
+    border-radius:14px;
+
+    border:1px solid rgba(255,255,255,.09);
+
+    background:
+        rgba(0,0,0,.22);
+
+    color:white;
+    outline:none;
+
+    padding:0 16px;
+
+    transition:.2s;
+}
+
+.input:focus{
+    border-color:rgba(0,242,254,.55);
+
+    box-shadow:
+        0 0 0 3px rgba(0,242,254,.07);
+}
+
+.login-btn{
+    width:100%;
+    height:55px;
+    border:0;
+    border-radius:14px;
+
+    color:#001014;
+    font-weight:900;
+
+    background:
+        linear-gradient(
+            100deg,
+            var(--cyan),
+            #53f6ff
+        );
+
+    box-shadow:
+        0 10px 30px rgba(0,242,254,.18);
+
+    transition:.2s;
+}
+
+.login-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:
+        0 15px 40px rgba(0,242,254,.28);
+}
+
+.login-btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+    transform:none;
+}
+
+.powered{
+    margin-top:24px;
+    color:#5d6679;
+    font-size:11px;
+    letter-spacing:2px;
+}
+
+
+/* ================================
+   DASHBOARD
+================================ */
 
 .topbar{
-    position:sticky;
-    top:0;
-    z-index:50;
-    padding:15px 20px;
-    border-bottom:1px solid rgba(255,255,255,.06);
-    background:rgba(5,7,13,.78);
-    backdrop-filter:blur(22px);
-}
-
-.nav{
-    max-width:1200px;
-    margin:auto;
+    padding:20px;
     display:flex;
     align-items:center;
     justify-content:space-between;
     gap:15px;
+    margin-bottom:18px;
 }
 
-.brand{
+.user{
     display:flex;
     align-items:center;
-    gap:11px;
+    gap:12px;
 }
 
-.brand-icon{
+.avatar{
     width:42px;
     height:42px;
+
+    display:grid;
+    place-items:center;
+
     border-radius:13px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+
+    color:var(--cyan);
+
+    background:rgba(0,242,254,.08);
+
+    border:1px solid rgba(0,242,254,.15);
+
     font-weight:900;
-    background:linear-gradient(
-        135deg,
-        var(--cyan),
-        var(--purple),
-        var(--pink)
-    );
-    box-shadow:0 0 22px rgba(0,242,254,.16);
-}
-
-.brand-text{
-    font-size:16px;
-    font-weight:900;
-    letter-spacing:1px;
-}
-
-.brand-text small{
-    display:block;
-    margin-top:2px;
-    color:#667189;
-    font-size:9px;
-    letter-spacing:1.5px;
-}
-
-.user-actions{
-    display:flex;
-    align-items:center;
-    gap:9px;
 }
 
 .user-name{
-    max-width:150px;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    padding:9px 12px;
-    border-radius:12px;
-    color:#aab6ca;
-    background:rgba(255,255,255,.04);
-    border:1px solid rgba(255,255,255,.06);
-    font-size:12px;
+    font-weight:800;
+}
+
+.user-status{
+    color:var(--green);
+    font-size:11px;
+    margin-top:3px;
 }
 
 .logout{
-    padding:9px 13px;
-    border:1px solid rgba(255,59,107,.20);
+    border:1px solid rgba(255,77,109,.2);
+    background:rgba(255,77,109,.07);
+    color:#ff7890;
+
     border-radius:12px;
-    background:rgba(255,59,107,.06);
-    color:#ff7597;
-    cursor:pointer;
-    font-weight:700;
+    padding:10px 14px;
+
     font-size:12px;
 }
 
-.container{
-    max-width:1200px;
-    margin:auto;
-    padding:30px 20px 60px;
+.logout:hover{
+    background:rgba(255,77,109,.14);
 }
 
-/* Hero */
 
-.hero{
-    position:relative;
-    overflow:hidden;
-    padding:35px;
-    border-radius:28px;
-    margin-bottom:22px;
-    border:1px solid var(--border);
-    background:
-        radial-gradient(circle at 85% 20%,rgba(155,92,255,.15),transparent 30%),
-        radial-gradient(circle at 15% 80%,rgba(0,242,254,.09),transparent 35%),
-        rgba(12,16,28,.78);
-}
-
-.hero::after{
-    content:"";
-    position:absolute;
-    width:260px;
-    height:260px;
-    border-radius:50%;
-    right:-100px;
-    bottom:-130px;
-    background:var(--pink);
-    opacity:.05;
-    filter:blur(80px);
-}
-
-.hero h2{
-    font-size:clamp(28px,5vw,45px);
-    line-height:1.05;
-    font-weight:950;
-}
-
-.hero h2 span{
-    background:linear-gradient(
-        90deg,
-        var(--cyan),
-        #8b6dff,
-        var(--pink)
-    );
-    -webkit-background-clip:text;
-    color:transparent;
-}
-
-.hero p{
-    max-width:650px;
-    margin-top:13px;
-    color:#7f8ba3;
-    font-size:13px;
-    line-height:1.7;
-}
-
-/* Stats */
+/* ================================
+   STATS
+================================ */
 
 .stats{
     display:grid;
     grid-template-columns:repeat(3,1fr);
-    gap:14px;
-    margin-bottom:22px;
+    gap:15px;
+    margin-bottom:18px;
 }
 
 .stat{
     padding:20px;
-    border-radius:20px;
-    border:1px solid rgba(255,255,255,.07);
-    background:rgba(14,18,30,.72);
 }
 
 .stat-title{
-    color:#727e95;
-    font-size:11px;
+    color:var(--muted);
+    font-size:12px;
     margin-bottom:8px;
 }
 
@@ -443,164 +424,198 @@ body::before{
     font-weight:900;
 }
 
-.stat-value.cyan{
-    color:var(--cyan);
+
+/* ================================
+   UPLOAD
+================================ */
+
+.upload-card{
+    padding:25px;
+    margin-bottom:18px;
 }
 
-.stat-value.purple{
-    color:#a986ff;
-}
+.upload-zone{
+    min-height:190px;
 
-.stat-value.green{
-    color:var(--green);
-}
-
-/* Upload */
-
-.upload-box{
-    position:relative;
-    overflow:hidden;
-    margin-bottom:22px;
-    padding:35px 25px;
-    text-align:center;
     border:1px dashed rgba(0,242,254,.28);
-    border-radius:23px;
-    background:rgba(0,242,254,.025);
-    transition:.25s;
+    border-radius:20px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(0,242,254,.05),
+            transparent 65%
+        );
+
+    transition:.2s;
 }
 
-.upload-box.dragover{
-    background:rgba(0,242,254,.08);
+.upload-zone.drag{
     border-color:var(--cyan);
+
+    background:
+        rgba(0,242,254,.08);
+
     transform:scale(1.01);
 }
 
 .upload-icon{
-    width:65px;
-    height:65px;
-    margin:0 auto 15px;
-    border-radius:19px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:27px;
-    background:rgba(0,242,254,.08);
-    border:1px solid rgba(0,242,254,.15);
+    font-size:42px;
+    margin-bottom:12px;
 }
 
-.upload-box h3{
-    font-size:18px;
+.upload-zone h3{
+    font-size:19px;
+    margin-bottom:7px;
 }
 
-.upload-box p{
-    color:#69758b;
-    font-size:12px;
-    margin:8px 0 17px;
+.upload-zone p{
+    color:var(--muted);
+    font-size:13px;
 }
 
-.upload-btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    padding:12px 19px;
-    border:0;
+.browse{
+    display:inline-block;
+    margin-top:15px;
+
+    padding:11px 18px;
+
     border-radius:12px;
-    cursor:pointer;
-    color:#061018;
+
+    color:#001014;
     background:var(--cyan);
-    font-weight:900;
+
+    font-weight:800;
+    font-size:13px;
 }
 
 #fileInput{
     display:none;
 }
 
-/* Toolbar */
+.upload-progress{
+    margin-top:15px;
+}
 
-.toolbar{
+.progress-bar{
+    height:6px;
+    background:rgba(255,255,255,.06);
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress{
+    width:0%;
+    height:100%;
+    background:linear-gradient(90deg,var(--cyan),var(--purple));
+    transition:.2s;
+}
+
+
+/* ================================
+   FILES
+================================ */
+
+.files-card{
+    padding:22px;
+}
+
+.files-head{
     display:flex;
     align-items:center;
     justify-content:space-between;
     gap:15px;
-    margin-bottom:14px;
+
+    margin-bottom:18px;
 }
 
-.section-title{
-    font-size:18px;
-    font-weight:900;
+.files-head h2{
+    font-size:20px;
 }
 
 .search{
-    width:260px;
-    padding:12px 15px;
+    width:240px;
+    height:42px;
     border-radius:12px;
+
+    background:rgba(0,0,0,.2);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    color:white;
     outline:none;
-    border:1px solid rgba(255,255,255,.07);
-    background:rgba(255,255,255,.035);
-    color:#fff;
+
+    padding:0 13px;
 }
 
 .search:focus{
-    border-color:var(--cyan);
+    border-color:rgba(0,242,254,.35);
 }
 
-/* Files */
-
-.files{
-    display:grid;
+.files-list{
+    display:flex;
+    flex-direction:column;
     gap:10px;
 }
 
-.file-card{
+.file{
     display:flex;
     align-items:center;
     gap:14px;
-    padding:15px;
-    border-radius:17px;
+
+    padding:14px;
+
+    border-radius:15px;
+
     border:1px solid rgba(255,255,255,.06);
-    background:rgba(12,16,28,.75);
+
+    background:rgba(255,255,255,.025);
+
     transition:.2s;
 }
 
-.file-card:hover{
+.file:hover{
     border-color:rgba(0,242,254,.16);
-    transform:translateY(-1px);
+    background:rgba(0,242,254,.025);
 }
 
 .file-icon{
-    width:46px;
-    height:46px;
-    flex:none;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border-radius:13px;
+    width:44px;
+    height:44px;
+
+    display:grid;
+    place-items:center;
+
+    border-radius:12px;
+
+    background:rgba(139,92,246,.10);
+
     font-size:20px;
-    background:linear-gradient(
-        135deg,
-        rgba(0,242,254,.10),
-        rgba(155,92,255,.10)
-    );
 }
 
 .file-info{
-    flex:1;
     min-width:0;
+    flex:1;
 }
 
 .file-name{
+    font-weight:700;
+
+    white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
-    white-space:nowrap;
-    font-weight:750;
-    font-size:13px;
 }
 
 .file-meta{
-    margin-top:5px;
-    color:#68758d;
-    font-size:10px;
+    color:var(--muted);
+    font-size:11px;
+    margin-top:4px;
 }
 
 .file-actions{
@@ -609,97 +624,92 @@ body::before{
 }
 
 .action{
-    width:36px;
-    height:36px;
+    width:38px;
+    height:38px;
+
     border-radius:10px;
-    border:1px solid rgba(255,255,255,.07);
-    background:rgba(255,255,255,.035);
-    color:#c8d1e2;
-    cursor:pointer;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    background:rgba(255,255,255,.03);
+
+    color:white;
+
+    display:grid;
+    place-items:center;
 }
 
 .action:hover{
-    border-color:var(--cyan);
+    border-color:rgba(0,242,254,.3);
     color:var(--cyan);
 }
 
 .action.delete:hover{
-    border-color:var(--red);
-    color:#ff6387;
+    border-color:rgba(255,77,109,.35);
+    color:#ff7890;
 }
 
 .empty{
+    padding:45px 15px;
     text-align:center;
-    padding:50px 20px;
-    border-radius:20px;
-    border:1px dashed rgba(255,255,255,.08);
-    color:#68758d;
+    color:var(--muted);
 }
 
-.loading{
+
+/* ================================
+   FOOTER
+================================ */
+
+.footer{
     text-align:center;
-    padding:30px;
-    color:#758198;
+    padding:28px 0 0;
+
+    color:#515b70;
+    font-size:11px;
+    letter-spacing:1.5px;
 }
 
-/* Progress */
-
-.progress-wrap{
-    display:none;
-    margin-top:20px;
+.footer strong{
+    color:#727d93;
 }
 
-.progress{
-    height:6px;
-    overflow:hidden;
-    border-radius:100px;
-    background:rgba(255,255,255,.06);
-}
 
-.progress-bar{
-    width:0%;
-    height:100%;
-    border-radius:100px;
-    background:linear-gradient(
-        90deg,
-        var(--cyan),
-        var(--purple),
-        var(--pink)
-    );
-    transition:width .2s;
-}
+/* ================================
+   TOAST
+================================ */
 
-.progress-text{
-    margin-top:7px;
-    text-align:center;
-    color:#718098;
-    font-size:10px;
-}
-
-/* Toast */
-
-#toastContainer{
+.toast-container{
     position:fixed;
     right:18px;
     bottom:18px;
-    z-index:1000;
+
+    z-index:9999;
+
     display:flex;
     flex-direction:column;
-    gap:8px;
+    gap:10px;
 }
 
 .toast{
     min-width:260px;
     max-width:360px;
-    padding:13px 15px;
+
+    padding:14px 16px;
+
     border-radius:14px;
-    color:#fff;
-    background:rgba(16,20,32,.95);
+
+    background:
+        rgba(10,14,24,.94);
+
     border:1px solid rgba(255,255,255,.08);
-    box-shadow:0 15px 40px rgba(0,0,0,.35);
-    backdrop-filter:blur(15px);
-    font-size:12px;
-    animation:toastIn .25s ease;
+
+    box-shadow:
+        0 15px 50px rgba(0,0,0,.35);
+
+    font-size:13px;
+
+    animation:
+        toastIn .25s ease;
 }
 
 .toast.success{
@@ -707,67 +717,84 @@ body::before{
 }
 
 .toast.error{
-    border-color:rgba(255,59,107,.25);
+    border-color:rgba(255,77,109,.3);
 }
 
 @keyframes toastIn{
     from{
         opacity:0;
-        transform:translateY(10px);
+        transform:translateY(15px);
     }
+
     to{
         opacity:1;
         transform:translateY(0);
     }
 }
 
-/* Footer */
 
-.footer{
-    text-align:center;
-    margin-top:35px;
-    color:#4d586e;
-    font-size:10px;
-}
-
-.footer strong{
-    color:#6f7b92;
-}
-
-/* Responsive */
+/* ================================
+   MOBILE
+================================ */
 
 @media(max-width:700px){
 
-    .auth-card{
-        padding:23px;
-    }
-
-    .logo-area h1{
-        font-size:27px;
-    }
-
     .container{
-        padding:20px 14px 45px;
+        width:94%;
+        padding-top:18px;
     }
 
-    .hero{
+    .header{
+        margin-bottom:15px;
+    }
+
+    .logo h1{
+        font-size:18px;
+    }
+
+    .logo-icon{
+        width:42px;
+        height:42px;
+    }
+
+    .login{
         padding:25px 20px;
+    }
+
+    .login h2{
+        font-size:25px;
     }
 
     .stats{
         grid-template-columns:1fr;
     }
 
-    .toolbar{
-        flex-direction:column;
+    .topbar{
+        padding:15px;
+    }
+
+    .upload-card{
+        padding:15px;
+    }
+
+    .upload-zone{
+        min-height:170px;
+    }
+
+    .files-card{
+        padding:15px;
+    }
+
+    .files-head{
         align-items:stretch;
+        flex-direction:column;
     }
 
     .search{
         width:100%;
     }
 
-    .file-card{
+    .file{
         align-items:flex-start;
     }
 
@@ -775,172 +802,168 @@ body::before{
         flex-direction:column;
     }
 
-    .user-name{
-        display:none;
+    .toast-container{
+        left:12px;
+        right:12px;
+        bottom:12px;
     }
 
-    .brand-text{
-        font-size:13px;
+    .toast{
+        min-width:0;
+        max-width:none;
     }
 }
+
 </style>
 </head>
 
 <body>
 
-<!-- ==========================
-     AUTH PAGE
-========================== -->
+<div class="background">
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+    <div class="orb three"></div>
+</div>
 
-<section id="authPage">
 
-    <div class="auth-wrapper">
+<div class="container">
 
-        <div class="logo-area">
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div class="logo">
 
             <div class="logo-icon">
-                CTH
+                <span>CTH</span>
             </div>
 
-            <h1>
-                <span>CTH HOSTING</span>
-            </h1>
-
-            <p>
-                Secure • Fast • Personal File Cloud
-            </p>
-
-        </div>
-
-        <div class="auth-card">
-
-            <div class="open-badge">
-                <span class="open-dot"></span>
-                OPEN ACCESS
+            <div>
+                <h1>CTH HOSTING</h1>
+                <p>SECURE • FAST • PERSONAL FILE CLOUD</p>
             </div>
 
-            <form id="loginForm">
-
-                <div class="field">
-
-                    <label>
-                        Enter Anything
-                    </label>
-
-                    <input
-                        id="loginName"
-                        type="text"
-                        maxlength="60"
-                        placeholder="Enter your name..."
-                        autocomplete="off"
-                        required
-                    >
-
-                </div>
-
-                <button
-                    class="primary"
-                    type="submit"
-                    id="enterBtn"
-                >
-                    🚀 ENTER CTH HOSTING
-                </button>
-
-            </form>
-
-            <div class="auth-note">
-                কোনো Email বা Password প্রয়োজন নেই।<br>
-                যেকোনো নাম লিখে CTH HOSTING-এ প্রবেশ করুন।
-            </div>
-
-        </div>
-
-        <div class="credit">
-            POWERED BY <strong>SHADOW JOKER</strong>
         </div>
 
     </div>
 
-</section>
+
+    <!-- LOGIN -->
+
+    <section id="loginScreen" class="login-wrap">
+
+        <div class="card login">
+
+            <div class="login-logo">
+                <strong>CTH</strong>
+            </div>
+
+            <h2>OPEN ACCESS</h2>
+
+            <p class="login-sub">
+                Enter any name to access your personal
+                CTH HOSTING cloud.
+                <br>
+                No email or password required.
+            </p>
 
 
-<!-- ==========================
-     APP PAGE
-========================== -->
+            <div class="input-group">
 
-<section id="appPage">
+                <label for="username">
+                    Your Name
+                </label>
 
-    <header class="topbar">
-
-        <div class="nav">
-
-            <div class="brand">
-
-                <div class="brand-icon">
-                    C
-                </div>
-
-                <div class="brand-text">
-                    CTH HOSTING
-                    <small>PRIVATE FILE CLOUD</small>
-                </div>
+                <input
+                    id="username"
+                    class="input"
+                    type="text"
+                    maxlength="40"
+                    autocomplete="off"
+                    placeholder="Enter anything..."
+                >
 
             </div>
 
-            <div class="user-actions">
 
-                <div
-                    class="user-name"
-                    id="userName"
-                >
-                    @Guest
-                </div>
+            <button
+                id="loginBtn"
+                class="login-btn"
+            >
+                🚀 ENTER CTH HOSTING
+            </button>
 
-                <button
-                    class="logout"
-                    id="logoutBtn"
-                >
-                    Logout
-                </button>
 
+            <div class="powered">
+                POWERED BY SHADOW JOKER
             </div>
 
         </div>
 
-    </header>
+    </section>
 
 
-    <main class="container">
+    <!-- DASHBOARD -->
 
-        <section class="hero">
+    <section
+        id="dashboard"
+        class="hidden"
+    >
 
-            <h2>
-                Your Files.<br>
-                <span>Your Cloud.</span>
-            </h2>
+        <!-- USER BAR -->
 
-            <p>
-                Upload, manage, download and delete your personal
-                files from one futuristic cloud dashboard.
-                Your files are separated by your Supabase user account.
-            </p>
+        <div class="card topbar">
 
-        </section>
+            <div class="user">
+
+                <div
+                    id="avatar"
+                    class="avatar"
+                >
+                    C
+                </div>
+
+                <div>
+
+                    <div
+                        id="displayName"
+                        class="user-name"
+                    >
+                        User
+                    </div>
+
+                    <div class="user-status">
+                        ● SECURE SESSION ACTIVE
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <button
+                id="logoutBtn"
+                class="logout"
+            >
+                Logout
+            </button>
+
+        </div>
 
 
         <!-- STATS -->
 
-        <section class="stats">
+        <div class="stats">
 
-            <div class="stat">
+            <div class="card stat">
 
                 <div class="stat-title">
                     TOTAL FILES
                 </div>
 
                 <div
-                    class="stat-value cyan"
                     id="totalFiles"
+                    class="stat-value"
                 >
                     0
                 </div>
@@ -948,15 +971,15 @@ body::before{
             </div>
 
 
-            <div class="stat">
+            <div class="card stat">
 
                 <div class="stat-title">
                     STORAGE USED
                 </div>
 
                 <div
-                    class="stat-value purple"
                     id="storageUsed"
+                    class="stat-value"
                 >
                     0 B
                 </div>
@@ -964,135 +987,143 @@ body::before{
             </div>
 
 
-            <div class="stat">
+            <div class="card stat">
 
                 <div class="stat-title">
-                    ACCOUNT
+                    MAX FILE SIZE
                 </div>
 
-                <div
-                    class="stat-value green"
-                    id="accountStatus"
-                >
-                    ACTIVE
+                <div class="stat-value">
+                    50 MB
                 </div>
 
             </div>
 
-        </section>
+        </div>
 
 
         <!-- UPLOAD -->
 
-        <section
-            class="upload-box"
-            id="uploadBox"
-        >
-
-            <div class="upload-icon">
-                ☁️
-            </div>
-
-            <h3>
-                Upload Your Files
-            </h3>
-
-            <p>
-                ZIP, PDF, JPG, PNG, MP4, APK, documents and more
-            </p>
-
-            <label
-                class="upload-btn"
-                for="fileInput"
-            >
-                📁 Choose Files
-            </label>
-
-            <input
-                type="file"
-                id="fileInput"
-                multiple
-            >
+        <div class="card upload-card">
 
             <div
-                class="progress-wrap"
-                id="progressWrap"
+                id="uploadZone"
+                class="upload-zone"
             >
 
-                <div class="progress">
+                <div>
+
+                    <div class="upload-icon">
+                        ☁️
+                    </div>
+
+                    <h3>
+                        Drop your files here
+                    </h3>
+
+                    <p>
+                        ZIP, images, videos, documents and more
+                    </p>
+
+                    <label
+                        for="fileInput"
+                        class="browse"
+                    >
+                        📁 Choose Files
+                    </label>
+
+                    <input
+                        id="fileInput"
+                        type="file"
+                        multiple
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="uploadProgress"
+                class="upload-progress hidden"
+            >
+
+                <div class="progress-bar">
 
                     <div
-                        class="progress-bar"
-                        id="progressBar"
+                        id="progress"
+                        class="progress"
                     ></div>
 
                 </div>
 
-                <div
-                    class="progress-text"
-                    id="progressText"
+            </div>
+
+        </div>
+
+
+        <!-- FILES -->
+
+        <div class="card files-card">
+
+            <div class="files-head">
+
+                <h2>
+                    📦 My Files
+                </h2>
+
+                <input
+                    id="search"
+                    class="search"
+                    type="search"
+                    placeholder="Search files..."
                 >
-                    Uploading...
+
+            </div>
+
+
+            <div
+                id="filesList"
+                class="files-list"
+            >
+
+                <div class="empty">
+                    Loading files...
                 </div>
 
             </div>
 
-        </section>
-
-
-        <!-- FILE LIST -->
-
-        <div class="toolbar">
-
-            <div class="section-title">
-                📦 My Files
-            </div>
-
-            <input
-                id="searchInput"
-                class="search"
-                type="search"
-                placeholder="Search files..."
-            >
-
         </div>
-
-
-        <section
-            id="fileList"
-            class="files"
-        >
-
-            <div class="loading">
-                Loading files...
-            </div>
-
-        </section>
 
 
         <div class="footer">
-            CTH HOSTING © 2026 — Created by
-            <strong>SHADOW JOKER</strong>
+            CTH HOSTING • SECURE PERSONAL CLOUD
+            <br><br>
+            <strong>POWERED BY SHADOW JOKER</strong>
         </div>
 
-    </main>
+    </section>
 
-</section>
+</div>
 
 
-<div id="toastContainer"></div>
+<div
+    id="toastContainer"
+    class="toast-container"
+></div>
 
 
 <script>
-/* ============================================================
+
+/* =====================================================
    SUPABASE CONFIG
-============================================================ */
+===================================================== */
 
 const SUPABASE_URL =
     "https://jxrbfervrwxtntehfdgs.supabase.co";
 
 const SUPABASE_ANON_KEY =
-    "sb_publishable_LIQNXKQ_L8HCeFzDLsSyrw_KI1ppPgB";
+    "sb_publishable_LIQNXKQ_L8HCeFzDLsSyrw_KI1ppPg";
 
 
 const supabaseClient =
@@ -1102,54 +1133,61 @@ const supabaseClient =
     );
 
 
-/* ============================================================
-   GLOBAL
-============================================================ */
+/* =====================================================
+   CONFIG
+===================================================== */
 
-let currentUser = null;
-let currentDisplayName = "Guest";
-let allFiles = [];
+const BUCKET_NAME = "files";
 
 const MAX_FILE_SIZE =
     50 * 1024 * 1024;
 
 
-/* ============================================================
-   DOM
-============================================================ */
+/* =====================================================
+   STATE
+===================================================== */
 
-const authPage =
-    document.getElementById("authPage");
+let currentUser = null;
 
-const appPage =
-    document.getElementById("appPage");
+let allFiles = [];
 
-const loginForm =
-    document.getElementById("loginForm");
 
-const loginName =
-    document.getElementById("loginName");
+/* =====================================================
+   ELEMENTS
+===================================================== */
 
-const enterBtn =
-    document.getElementById("enterBtn");
+const loginScreen =
+    document.getElementById("loginScreen");
 
-const userName =
-    document.getElementById("userName");
+const dashboard =
+    document.getElementById("dashboard");
+
+const username =
+    document.getElementById("username");
+
+const loginBtn =
+    document.getElementById("loginBtn");
+
+const logoutBtn =
+    document.getElementById("logoutBtn");
+
+const displayName =
+    document.getElementById("displayName");
+
+const avatar =
+    document.getElementById("avatar");
 
 const fileInput =
     document.getElementById("fileInput");
 
-const uploadBox =
-    document.getElementById("uploadBox");
+const uploadZone =
+    document.getElementById("uploadZone");
 
-const fileList =
-    document.getElementById("fileList");
+const filesList =
+    document.getElementById("filesList");
 
-const searchInput =
-    document.getElementById("searchInput");
-
-const logoutBtn =
-    document.getElementById("logoutBtn");
+const search =
+    document.getElementById("search");
 
 const totalFiles =
     document.getElementById("totalFiles");
@@ -1157,80 +1195,62 @@ const totalFiles =
 const storageUsed =
     document.getElementById("storageUsed");
 
-const progressWrap =
-    document.getElementById("progressWrap");
+const uploadProgress =
+    document.getElementById("uploadProgress");
 
-const progressBar =
-    document.getElementById("progressBar");
+const progress =
+    document.getElementById("progress");
 
-const progressText =
-    document.getElementById("progressText");
+const toastContainer =
+    document.getElementById("toastContainer");
 
 
-/* ============================================================
+/* =====================================================
    TOAST
-============================================================ */
+===================================================== */
 
-function toast(message, type = "success") {
+function toast(
+    message,
+    type = "success"
+){
 
-    const box =
+    const el =
         document.createElement("div");
 
-    box.className =
-        "toast " + type;
+    el.className =
+        `toast ${type}`;
 
-    box.textContent =
+    el.textContent =
         message;
 
-    document
-        .getElementById("toastContainer")
-        .appendChild(box);
+    toastContainer.appendChild(el);
 
     setTimeout(() => {
 
-        box.style.opacity = "0";
-        box.style.transform =
+        el.style.opacity = "0";
+
+        el.style.transform =
             "translateY(10px)";
 
         setTimeout(() => {
-            box.remove();
+            el.remove();
         }, 250);
 
     }, 3500);
 }
 
 
-/* ============================================================
-   HTML ESCAPE
-============================================================ */
+/* =====================================================
+   FORMAT SIZE
+===================================================== */
 
-function escapeHtml(value) {
+function formatSize(bytes){
 
-    return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-}
-
-
-/* ============================================================
-   FILE SIZE
-============================================================ */
-
-function formatBytes(bytes) {
-
-    if (!bytes || bytes <= 0)
+    if (!bytes)
         return "0 B";
 
-    const units = [
-        "B",
-        "KB",
-        "MB",
-        "GB",
-        "TB"
-    ];
+    const units =
+        ["B","KB","MB","GB","TB"];
 
     const i =
         Math.floor(
@@ -1239,257 +1259,259 @@ function formatBytes(bytes) {
         );
 
     return (
-        parseFloat(
-            (bytes / Math.pow(1024, i))
-                .toFixed(2)
-        )
-        + " "
-        + units[i]
+        bytes /
+        Math.pow(1024,i)
+    ).toFixed(
+        i === 0 ? 0 : 2
+    )
+    + " "
+    + units[i];
+}
+
+
+/* =====================================================
+   FORMAT DATE
+===================================================== */
+
+function formatDate(date){
+
+    return new Date(date)
+        .toLocaleString(
+            undefined,
+            {
+                year:"numeric",
+                month:"short",
+                day:"numeric",
+                hour:"2-digit",
+                minute:"2-digit"
+            }
+        );
+}
+
+
+/* =====================================================
+   SAFE FILE NAME
+===================================================== */
+
+function safeFileName(name){
+
+    return name
+        .replace(/[^\w.\-()\[\] ]+/g,"_")
+        .replace(/\s+/g," ")
+        .trim()
+        .slice(0,180);
+
+}
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+async function login(){
+
+    const name =
+        username.value.trim();
+
+
+    if(!name){
+
+        toast(
+            "Please enter your name.",
+            "error"
+        );
+
+        username.focus();
+
+        return;
+    }
+
+
+    if(name.length < 1){
+
+        toast(
+            "Enter a valid name.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    loginBtn.disabled = true;
+
+    loginBtn.textContent =
+        "⏳ CONNECTING...";
+
+
+    try{
+
+        /*
+         * Anonymous login.
+         *
+         * No profiles table.
+         * No custom trigger.
+         * No email.
+         * No password.
+         */
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient.auth
+            .signInAnonymously();
+
+
+        if(error){
+
+            throw error;
+        }
+
+
+        if(!data.user){
+
+            throw new Error(
+                "Authentication user was not created."
+            );
+        }
+
+
+        currentUser =
+            data.user;
+
+
+        localStorage.setItem(
+            "cth_username",
+            name
+        );
+
+
+        showDashboard(name);
+
+        await loadFiles();
+
+
+        toast(
+            "Welcome to CTH HOSTING 🚀",
+            "success"
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "LOGIN ERROR:",
+            error
+        );
+
+
+        toast(
+            "Login failed: " +
+            (error.message || "Unknown error"),
+            "error"
+        );
+
+
+    }finally{
+
+        loginBtn.disabled = false;
+
+        loginBtn.textContent =
+            "🚀 ENTER CTH HOSTING";
+    }
+
+}
+
+
+/* =====================================================
+   SHOW DASHBOARD
+===================================================== */
+
+function showDashboard(name){
+
+    loginScreen.classList.add(
+        "hidden"
+    );
+
+    dashboard.classList.remove(
+        "hidden"
+    );
+
+
+    displayName.textContent =
+        name;
+
+
+    avatar.textContent =
+        name
+            .charAt(0)
+            .toUpperCase();
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+async function logout(){
+
+    try{
+
+        await supabaseClient.auth
+            .signOut();
+
+    }catch(error){
+
+        console.error(error);
+
+    }
+
+
+    currentUser = null;
+
+    allFiles = [];
+
+
+    dashboard.classList.add(
+        "hidden"
+    );
+
+    loginScreen.classList.remove(
+        "hidden"
+    );
+
+
+    username.value = "";
+
+    filesList.innerHTML = "";
+
+    totalFiles.textContent = "0";
+
+    storageUsed.textContent = "0 B";
+
+
+    toast(
+        "Logged out successfully."
     );
 }
 
 
-/* ============================================================
-   FILE ICON
-============================================================ */
+/* =====================================================
+   LOAD FILES
+===================================================== */
 
-function getFileIcon(fileName) {
+async function loadFiles(){
 
-    const ext =
-        fileName
-            .split(".")
-            .pop()
-            .toLowerCase();
+    if(!currentUser)
+        return;
 
-    if (
-        ["zip","rar","7z","tar","gz"]
-            .includes(ext)
-    )
-        return "🗜️";
 
-    if (
-        ["jpg","jpeg","png","gif","webp","svg"]
-            .includes(ext)
-    )
-        return "🖼️";
+    filesList.innerHTML =
+        `<div class="empty">
+            Loading your files...
+        </div>`;
 
-    if (
-        ["mp4","mkv","avi","mov","webm"]
-            .includes(ext)
-    )
-        return "🎬";
-
-    if (
-        ["mp3","wav","ogg","m4a"]
-            .includes(ext)
-    )
-        return "🎵";
-
-    if (
-        ["pdf"]
-            .includes(ext)
-    )
-        return "📕";
-
-    if (
-        ["doc","docx","txt"]
-            .includes(ext)
-    )
-        return "📄";
-
-    if (
-        ["apk"]
-            .includes(ext)
-    )
-        return "📱";
-
-    if (
-        ["js","html","css","php","py","json"]
-            .includes(ext)
-    )
-        return "💻";
-
-    return "📦";
-}
-
-
-/* ============================================================
-   OPEN / CLOSE PAGES
-============================================================ */
-
-function openAuth() {
-
-    authPage.style.display =
-        "flex";
-
-    appPage.style.display =
-        "none";
-}
-
-
-function openApp() {
-
-    authPage.style.display =
-        "none";
-
-    appPage.style.display =
-        "block";
-
-    loadFiles();
-}
-
-
-/* ============================================================
-   ANONYMOUS LOGIN
-============================================================ */
-
-loginForm.addEventListener(
-    "submit",
-    async function(e){
-
-        e.preventDefault();
-
-        const name =
-            loginName
-                .value
-                .trim();
-
-        if(!name){
-
-            toast(
-                "কিছু একটা লিখুন।",
-                "error"
-            );
-
-            return;
-        }
-
-        if(name.length > 60){
-
-            toast(
-                "নাম সর্বোচ্চ 60 অক্ষর হতে পারে।",
-                "error"
-            );
-
-            return;
-        }
-
-
-        enterBtn.disabled =
-            true;
-
-        enterBtn.textContent =
-            "⏳ CONNECTING...";
-
-
-        try {
-
-            /*
-             * যদি আগে থেকেই anonymous session থাকে,
-             * সেটাই ব্যবহার করা হবে।
-             */
-
-            const {
-                data: sessionData
-            } =
-            await supabaseClient
-                .auth
-                .getSession();
-
-
-            if(
-                sessionData &&
-                sessionData.session &&
-                sessionData.session.user
-            ){
-
-                currentUser =
-                    sessionData.session.user;
-
-            }else{
-
-                /*
-                 * নতুন anonymous account
-                 */
-
-                const {
-                    data,
-                    error
-                } =
-                await supabaseClient
-                    .auth
-                    .signInAnonymously({
-                        options:{
-                            data:{
-                                display_name:name
-                            }
-                        }
-                    });
-
-
-                if(error)
-                    throw error;
-
-                currentUser =
-                    data.user;
-
-            }
-
-
-            currentDisplayName =
-                name;
-
-            /*
-             * Browser-এ display name রাখা।
-             */
-
-            localStorage.setItem(
-                "cth_display_name",
-                name
-            );
-
-
-            userName.textContent =
-                "@" + name;
-
-
-            toast(
-                "Access Granted 🚀"
-            );
-
-
-            openApp();
-
-
-        }catch(error){
-
-            console.error(error);
-
-            toast(
-                "Login failed: " +
-                error.message,
-                "error"
-            );
-
-        }finally{
-
-            enterBtn.disabled =
-                false;
-
-            enterBtn.textContent =
-                "🚀 ENTER CTH HOSTING";
-
-        }
-
-    }
-);
-
-
-/* ============================================================
-   SESSION CHECK
-============================================================ */
-
-async function checkSession(){
 
     try{
 
@@ -1498,271 +1520,77 @@ async function checkSession(){
             error
         } =
         await supabaseClient
-            .auth
-            .getSession();
+            .from("files")
+            .select("*")
+            .eq(
+                "user_id",
+                currentUser.id
+            )
+            .order(
+                "created_at",
+                {
+                    ascending:false
+                }
+            );
 
 
-        if(error)
+        if(error){
+
             throw error;
-
-
-        if(
-            data &&
-            data.session &&
-            data.session.user
-        ){
-
-            currentUser =
-                data.session.user;
-
-
-            const savedName =
-                localStorage.getItem(
-                    "cth_display_name"
-                );
-
-
-            currentDisplayName =
-                savedName ||
-                currentUser
-                    .user_metadata
-                    ?.display_name ||
-                "Guest";
-
-
-            userName.textContent =
-                "@" +
-                currentDisplayName;
-
-
-            openApp();
-
-        }else{
-
-            openAuth();
-
         }
 
-    }catch(error){
 
-        console.error(error);
-
-        openAuth();
-
-    }
-
-}
+        allFiles =
+            data || [];
 
 
-/* ============================================================
-   AUTH STATE
-============================================================ */
+        updateStats();
 
-supabaseClient
-    .auth
-    .onAuthStateChange(
-        function(event, session){
-
-            if(session && session.user){
-
-                currentUser =
-                    session.user;
-
-            }
-
-            if(
-                event === "SIGNED_OUT"
-            ){
-
-                currentUser =
-                    null;
-
-                allFiles =
-                    [];
-
-                openAuth();
-
-            }
-
-        }
-    );
-
-
-/* ============================================================
-   LOAD FILES
-============================================================ */
-
-async function loadFiles(){
-
-    if(!currentUser)
-        return;
-
-
-    fileList.innerHTML =
-        `<div class="loading">
-            Loading files...
-        </div>`;
-
-
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .from("files")
-        .select("*")
-        .eq(
-            "user_id",
-            currentUser.id
-        )
-        .order(
-            "created_at",
-            {
-                ascending:false
-            }
+        renderFiles(
+            allFiles
         );
 
 
-    if(error){
+    }catch(error){
 
-        console.error(error);
+        console.error(
+            "LOAD FILES:",
+            error
+        );
 
-        fileList.innerHTML =
+
+        filesList.innerHTML =
             `<div class="empty">
-                ❌ Could not load files.<br>
-                <small>${escapeHtml(error.message)}</small>
+                Failed to load files.
             </div>`;
 
-        return;
+
+        toast(
+            error.message,
+            "error"
+        );
+
     }
 
-
-    allFiles =
-        data || [];
-
-
-    renderFiles(
-        allFiles
-    );
-
-    updateStats(
-        allFiles
-    );
 }
 
 
-/* ============================================================
-   RENDER FILES
-============================================================ */
+/* =====================================================
+   UPDATE STATS
+===================================================== */
 
-function renderFiles(files){
+function updateStats(){
 
-    if(!files.length){
-
-        fileList.innerHTML =
-            `<div class="empty">
-
-                <div style="font-size:35px;margin-bottom:10px;">
-                    📂
-                </div>
-
-                No files uploaded yet.
-
-            </div>`;
-
-        return;
-    }
+    totalFiles.textContent =
+        allFiles.length;
 
 
-    fileList.innerHTML =
-        files
-        .map(file => {
-
-            const safeName =
-                escapeHtml(
-                    file.file_name
-                );
-
-            const size =
-                formatBytes(
-                    file.file_size
-                );
-
-            const date =
-                file.created_at
-                ? new Date(
-                    file.created_at
-                  ).toLocaleString()
-                : "Unknown";
-
-
-            return `
-                <div
-                    class="file-card"
-                    data-id="${escapeHtml(file.id)}"
-                >
-
-                    <div class="file-icon">
-                        ${getFileIcon(file.file_name)}
-                    </div>
-
-
-                    <div class="file-info">
-
-                        <div
-                            class="file-name"
-                            title="${safeName}"
-                        >
-                            ${safeName}
-                        </div>
-
-                        <div class="file-meta">
-                            ${size} • ${escapeHtml(date)}
-                        </div>
-
-                    </div>
-
-
-                    <div class="file-actions">
-
-                        <button
-                            class="action"
-                            title="Download"
-                            onclick="downloadFile('${escapeHtml(file.id)}')"
-                        >
-                            ↓
-                        </button>
-
-                        <button
-                            class="action delete"
-                            title="Delete"
-                            onclick="deleteFile('${escapeHtml(file.id)}')"
-                        >
-                            ×
-                        </button>
-
-                    </div>
-
-                </div>
-            `;
-
-        })
-        .join("");
-}
-
-
-/* ============================================================
-   STATS
-============================================================ */
-
-function updateStats(files){
-
-    const count =
-        files.length;
-
-    const totalSize =
-        files.reduce(
-            (sum,file) =>
+    const total =
+        allFiles.reduce(
+            (
+                sum,
+                file
+            ) =>
                 sum +
                 Number(
                     file.file_size || 0
@@ -1771,24 +1599,691 @@ function updateStats(files){
         );
 
 
-    totalFiles.textContent =
-        count;
-
     storageUsed.textContent =
-        formatBytes(totalSize);
+        formatSize(total);
 }
 
 
-/* ============================================================
-   SEARCH
-============================================================ */
+/* =====================================================
+   FILE ICON
+===================================================== */
 
-searchInput.addEventListener(
+function fileIcon(
+    name,
+    mime
+){
+
+    const ext =
+        name
+            .split(".")
+            .pop()
+            .toLowerCase();
+
+
+    if(
+        ["jpg","jpeg","png","gif","webp","svg"]
+        .includes(ext)
+    )
+        return "🖼️";
+
+
+    if(
+        ["mp4","mkv","mov","avi","webm"]
+        .includes(ext)
+    )
+        return "🎬";
+
+
+    if(
+        ["mp3","wav","ogg","m4a"]
+        .includes(ext)
+    )
+        return "🎵";
+
+
+    if(
+        ["zip","rar","7z","tar","gz"]
+        .includes(ext)
+    )
+        return "📦";
+
+
+    if(
+        ["pdf"]
+        .includes(ext)
+    )
+        return "📕";
+
+
+    if(
+        ["doc","docx","txt"]
+        .includes(ext)
+    )
+        return "📄";
+
+
+    if(
+        ["js","html","css","json","py"]
+        .includes(ext)
+    )
+        return "💻";
+
+
+    return "📁";
+}
+
+
+/* =====================================================
+   RENDER FILES
+===================================================== */
+
+function renderFiles(
+    files
+){
+
+    if(!files.length){
+
+        filesList.innerHTML =
+            `<div class="empty">
+                📂 No files yet.
+                <br><br>
+                Upload your first file.
+            </div>`;
+
+        return;
+    }
+
+
+    filesList.innerHTML = "";
+
+
+    files.forEach(
+        file => {
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+            item.className =
+                "file";
+
+
+            const icon =
+                document.createElement(
+                    "div"
+                );
+
+            icon.className =
+                "file-icon";
+
+            icon.textContent =
+                fileIcon(
+                    file.file_name,
+                    file.mime_type
+                );
+
+
+            const info =
+                document.createElement(
+                    "div"
+                );
+
+            info.className =
+                "file-info";
+
+
+            const name =
+                document.createElement(
+                    "div"
+                );
+
+            name.className =
+                "file-name";
+
+            name.title =
+                file.file_name;
+
+            name.textContent =
+                file.file_name;
+
+
+            const meta =
+                document.createElement(
+                    "div"
+                );
+
+            meta.className =
+                "file-meta";
+
+            meta.textContent =
+                formatSize(
+                    file.file_size
+                )
+                + " • "
+                +
+                formatDate(
+                    file.created_at
+                );
+
+
+            info.appendChild(name);
+
+            info.appendChild(meta);
+
+
+            const actions =
+                document.createElement(
+                    "div"
+                );
+
+            actions.className =
+                "file-actions";
+
+
+            const download =
+                document.createElement(
+                    "button"
+                );
+
+            download.className =
+                "action";
+
+            download.title =
+                "Download";
+
+            download.textContent =
+                "⬇";
+
+            download.onclick =
+                () => downloadFile(file);
+
+
+            const remove =
+                document.createElement(
+                    "button"
+                );
+
+            remove.className =
+                "action delete";
+
+            remove.title =
+                "Delete";
+
+            remove.textContent =
+                "🗑";
+
+            remove.onclick =
+                () => deleteFile(file);
+
+
+            actions.appendChild(
+                download
+            );
+
+            actions.appendChild(
+                remove
+            );
+
+
+            item.appendChild(icon);
+
+            item.appendChild(info);
+
+            item.appendChild(actions);
+
+
+            filesList.appendChild(
+                item
+            );
+
+        }
+    );
+}
+
+
+/* =====================================================
+   UPLOAD FILES
+===================================================== */
+
+async function uploadFiles(
+    fileList
+){
+
+    if(!currentUser){
+
+        toast(
+            "Please login first.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const files =
+        Array.from(fileList);
+
+
+    if(!files.length)
+        return;
+
+
+    for(
+        const file of files
+    ){
+
+        if(
+            file.size >
+            MAX_FILE_SIZE
+        ){
+
+            toast(
+                `${file.name} is larger than 50 MB.`,
+                "error"
+            );
+
+            continue;
+        }
+
+
+        await uploadSingleFile(
+            file
+        );
+    }
+
+
+    await loadFiles();
+}
+
+
+/* =====================================================
+   SINGLE UPLOAD
+===================================================== */
+
+async function uploadSingleFile(
+    file
+){
+
+    uploadProgress.classList.remove(
+        "hidden"
+    );
+
+    progress.style.width =
+        "10%";
+
+
+    try{
+
+        const cleanName =
+            safeFileName(
+                file.name
+            );
+
+
+        if(!cleanName){
+
+            throw new Error(
+                "Invalid file name."
+            );
+        }
+
+
+        /*
+         * Important:
+         *
+         * Every user's files go inside:
+         *
+         * USER_ID / RANDOM_ID-FILENAME
+         *
+         * This is also used by Storage RLS.
+         */
+
+        const randomId =
+            crypto.randomUUID();
+
+
+        const path =
+            `${currentUser.id}/${randomId}-${cleanName}`;
+
+
+        progress.style.width =
+            "35%";
+
+
+        const {
+            error:uploadError
+        } =
+        await supabaseClient
+            .storage
+            .from(BUCKET_NAME)
+            .upload(
+                path,
+                file,
+                {
+                    cacheControl:"3600",
+                    upsert:false,
+                    contentType:
+                        file.type ||
+                        "application/octet-stream"
+                }
+            );
+
+
+        if(uploadError){
+
+            throw uploadError;
+        }
+
+
+        progress.style.width =
+            "70%";
+
+
+        const {
+            error:dbError
+        } =
+        await supabaseClient
+            .from("files")
+            .insert({
+
+                user_id:
+                    currentUser.id,
+
+                file_name:
+                    cleanName,
+
+                file_path:
+                    path,
+
+                file_size:
+                    file.size,
+
+                mime_type:
+                    file.type ||
+                    "application/octet-stream"
+
+            });
+
+
+        if(dbError){
+
+            /*
+             * Database insert failed.
+             *
+             * Remove uploaded storage object
+             * so there is no orphan file.
+             */
+
+            await supabaseClient
+                .storage
+                .from(BUCKET_NAME)
+                .remove([
+                    path
+                ]);
+
+            throw dbError;
+        }
+
+
+        progress.style.width =
+            "100%";
+
+
+        toast(
+            `${cleanName} uploaded successfully.`,
+            "success"
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "UPLOAD ERROR:",
+            error
+        );
+
+
+        toast(
+            `Upload failed: ${error.message}`,
+            "error"
+        );
+
+
+    }finally{
+
+        setTimeout(
+            () => {
+
+                uploadProgress
+                    .classList
+                    .add("hidden");
+
+                progress.style.width =
+                    "0%";
+
+            },
+            500
+        );
+    }
+
+}
+
+
+/* =====================================================
+   DOWNLOAD
+===================================================== */
+
+async function downloadFile(
+    file
+){
+
+    if(!currentUser)
+        return;
+
+
+    try{
+
+        /*
+         * Extra ownership check.
+         */
+
+        if(
+            file.user_id !==
+            currentUser.id
+        ){
+
+            throw new Error(
+                "Access denied."
+            );
+        }
+
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+            .storage
+            .from(BUCKET_NAME)
+            .createSignedUrl(
+                file.file_path,
+                60
+            );
+
+
+        if(error){
+
+            throw error;
+        }
+
+
+        if(!data?.signedUrl){
+
+            throw new Error(
+                "Could not create download URL."
+            );
+        }
+
+
+        const a =
+            document.createElement(
+                "a"
+            );
+
+        a.href =
+            data.signedUrl;
+
+        a.target =
+            "_blank";
+
+        a.rel =
+            "noopener";
+
+
+        document.body.appendChild(a);
+
+        a.click();
+
+        a.remove();
+
+
+    }catch(error){
+
+        console.error(
+            "DOWNLOAD ERROR:",
+            error
+        );
+
+
+        toast(
+            `Download failed: ${error.message}`,
+            "error"
+        );
+    }
+}
+
+
+/* =====================================================
+   DELETE
+===================================================== */
+
+async function deleteFile(
+    file
+){
+
+    if(!currentUser)
+        return;
+
+
+    if(
+        file.user_id !==
+        currentUser.id
+    ){
+
+        toast(
+            "Access denied.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const confirmed =
+        confirm(
+            `Delete "${file.file_name}"?`
+        );
+
+
+    if(!confirmed)
+        return;
+
+
+    try{
+
+        /*
+         * Delete Storage object
+         */
+
+        const {
+            error:storageError
+        } =
+        await supabaseClient
+            .storage
+            .from(BUCKET_NAME)
+            .remove([
+                file.file_path
+            ]);
+
+
+        if(storageError){
+
+            throw storageError;
+        }
+
+
+        /*
+         * Delete database record.
+         */
+
+        const {
+            error:dbError
+        } =
+        await supabaseClient
+            .from("files")
+            .delete()
+            .eq(
+                "id",
+                file.id
+            )
+            .eq(
+                "user_id",
+                currentUser.id
+            );
+
+
+        if(dbError){
+
+            throw dbError;
+        }
+
+
+        toast(
+            "File deleted.",
+            "success"
+        );
+
+
+        await loadFiles();
+
+
+    }catch(error){
+
+        console.error(
+            "DELETE ERROR:",
+            error
+        );
+
+
+        toast(
+            `Delete failed: ${error.message}`,
+            "error"
+        );
+    }
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+search.addEventListener(
     "input",
-    function(){
+    () => {
 
         const query =
-            this.value
+            search.value
                 .trim()
                 .toLowerCase();
 
@@ -1806,11 +2301,9 @@ searchInput.addEventListener(
         const filtered =
             allFiles.filter(
                 file =>
-                    String(
-                        file.file_name || ""
-                    )
-                    .toLowerCase()
-                    .includes(query)
+                    file.file_name
+                        .toLowerCase()
+                        .includes(query)
             );
 
 
@@ -1822,578 +2315,195 @@ searchInput.addEventListener(
 );
 
 
-/* ============================================================
-   FILE UPLOAD
-============================================================ */
+/* =====================================================
+   FILE INPUT
+===================================================== */
 
 fileInput.addEventListener(
     "change",
-    async function(){
+    () => {
 
-        const files =
-            Array.from(
-                this.files || []
-            );
+        uploadFiles(
+            fileInput.files
+        );
 
-
-        if(!files.length)
-            return;
-
-
-        for(
-            const file of files
-        ){
-
-            await uploadFile(
-                file
-            );
-
-        }
-
-
-        fileInput.value =
-            "";
-
-        await loadFiles();
+        fileInput.value = "";
 
     }
 );
 
 
-/* ============================================================
-   UPLOAD SINGLE FILE
-============================================================ */
+/* =====================================================
+   DRAG & DROP
+===================================================== */
 
-async function uploadFile(file){
+uploadZone.addEventListener(
+    "dragover",
+    event => {
 
-    if(!currentUser){
+        event.preventDefault();
 
-        toast(
-            "Please login first.",
-            "error"
+        uploadZone.classList.add(
+            "drag"
         );
-
-        return;
     }
+);
 
 
-    if(
-        file.size >
-        MAX_FILE_SIZE
-    ){
+uploadZone.addEventListener(
+    "dragleave",
+    () => {
 
-        toast(
-            file.name +
-            " is larger than 50 MB.",
-            "error"
+        uploadZone.classList.remove(
+            "drag"
         );
-
-        return;
     }
+);
 
 
-    progressWrap.style.display =
-        "block";
+uploadZone.addEventListener(
+    "drop",
+    event => {
 
-    progressBar.style.width =
-        "10%";
+        event.preventDefault();
 
-    progressText.textContent =
-        "Preparing " +
-        file.name;
-
-
-    try{
-
-        /*
-         * Filename safe করা হচ্ছে
-         */
-
-        const safeName =
-            file.name
-                .replace(
-                    /[^a-zA-Z0-9._-]/g,
-                    "_"
-                );
-
-
-        /*
-         * প্রত্যেক file-এর unique path
-         *
-         * IMPORTANT:
-         * user ID প্রথম অংশে থাকবে।
-         */
-
-        const filePath =
-            currentUser.id +
-            "/" +
-            crypto.randomUUID() +
-            "-" +
-            safeName;
-
-
-        progressBar.style.width =
-            "30%";
-
-
-        /*
-         * Supabase Storage
-         */
-
-        const {
-            error:
-            uploadError
-        } =
-        await supabaseClient
-            .storage
-            .from("files")
-            .upload(
-                filePath,
-                file,
-                {
-                    cacheControl:"3600",
-                    upsert:false,
-                    contentType:
-                        file.type ||
-                        "application/octet-stream"
-                }
-            );
-
-
-        if(uploadError)
-            throw uploadError;
-
-
-        progressBar.style.width =
-            "75%";
-
-
-        /*
-         * Database metadata
-         */
-
-        const {
-            error:
-            dbError
-        } =
-        await supabaseClient
-            .from("files")
-            .insert({
-
-                user_id:
-                    currentUser.id,
-
-                file_name:
-                    file.name,
-
-                file_path:
-                    filePath,
-
-                file_size:
-                    file.size,
-
-                mime_type:
-                    file.type ||
-                    "application/octet-stream"
-
-            });
-
-
-        if(dbError){
-
-            /*
-             * DB insert fail হলে
-             * storage থেকে file rollback।
-             */
-
-            await supabaseClient
-                .storage
-                .from("files")
-                .remove([
-                    filePath
-                ]);
-
-            throw dbError;
-        }
-
-
-        progressBar.style.width =
-            "100%";
-
-        progressText.textContent =
-            "Upload complete ✓";
-
-
-        toast(
-            file.name +
-            " uploaded successfully."
+        uploadZone.classList.remove(
+            "drag"
         );
 
 
-    }catch(error){
-
-        console.error(error);
-
-        toast(
-            "Upload failed: " +
-            error.message,
-            "error"
+        uploadFiles(
+            event.dataTransfer.files
         );
-
-    }finally{
-
-        setTimeout(() => {
-
-            progressWrap.style.display =
-                "none";
-
-            progressBar.style.width =
-                "0%";
-
-        }, 700);
-
     }
+);
 
-}
 
+/* =====================================================
+   BUTTONS
+===================================================== */
 
-/* ============================================================
-   DOWNLOAD
-============================================================ */
+loginBtn.addEventListener(
+    "click",
+    login
+);
 
-async function downloadFile(id){
-
-    if(!currentUser)
-        return;
-
-
-    const file =
-        allFiles.find(
-            item =>
-                String(item.id) ===
-                String(id)
-        );
-
-
-    if(!file){
-
-        toast(
-            "File not found.",
-            "error"
-        );
-
-        return;
-    }
-
-
-    try{
-
-        const {
-            data,
-            error
-        } =
-        await supabaseClient
-            .storage
-            .from("files")
-            .createSignedUrl(
-                file.file_path,
-                60
-            );
-
-
-        if(error)
-            throw error;
-
-
-        if(
-            !data ||
-            !data.signedUrl
-        ){
-
-            throw new Error(
-                "Could not create download URL."
-            );
-
-        }
-
-
-        const link =
-            document.createElement("a");
-
-        link.href =
-            data.signedUrl;
-
-        link.download =
-            file.file_name;
-
-        link.target =
-            "_blank";
-
-        document.body.appendChild(
-            link
-        );
-
-        link.click();
-
-        link.remove();
-
-
-        toast(
-            "Download started ↓"
-        );
-
-
-    }catch(error){
-
-        console.error(error);
-
-        toast(
-            "Download failed: " +
-            error.message,
-            "error"
-        );
-
-    }
-
-}
-
-
-/* ============================================================
-   DELETE
-============================================================ */
-
-async function deleteFile(id){
-
-    if(!currentUser)
-        return;
-
-
-    const file =
-        allFiles.find(
-            item =>
-                String(item.id) ===
-                String(id)
-        );
-
-
-    if(!file)
-        return;
-
-
-    const confirmDelete =
-        confirm(
-            "Delete \"" +
-            file.file_name +
-            "\"?"
-        );
-
-
-    if(!confirmDelete)
-        return;
-
-
-    try{
-
-        /*
-         * Storage delete
-         */
-
-        const {
-            error:
-            storageError
-        } =
-        await supabaseClient
-            .storage
-            .from("files")
-            .remove([
-                file.file_path
-            ]);
-
-
-        if(storageError)
-            throw storageError;
-
-
-        /*
-         * Database delete
-         *
-         * user_id condition রাখা হয়েছে।
-         */
-
-        const {
-            error:
-            dbError
-        } =
-        await supabaseClient
-            .from("files")
-            .delete()
-            .eq(
-                "id",
-                id
-            )
-            .eq(
-                "user_id",
-                currentUser.id
-            );
-
-
-        if(dbError)
-            throw dbError;
-
-
-        toast(
-            "File deleted."
-        );
-
-
-        await loadFiles();
-
-
-    }catch(error){
-
-        console.error(error);
-
-        toast(
-            "Delete failed: " +
-            error.message,
-            "error"
-        );
-
-    }
-
-}
-
-
-/* ============================================================
-   LOGOUT
-============================================================ */
 
 logoutBtn.addEventListener(
     "click",
-    async function(){
-
-        try{
-
-            await supabaseClient
-                .auth
-                .signOut();
-
-
-            currentUser =
-                null;
-
-            allFiles =
-                [];
-
-            localStorage.removeItem(
-                "cth_display_name"
-            );
-
-            openAuth();
-
-            loginName.value =
-                "";
-
-            toast(
-                "Logged out."
-            );
-
-        }catch(error){
-
-            console.error(error);
-
-            toast(
-                "Logout failed: " +
-                error.message,
-                "error"
-            );
-
-        }
-
-    }
+    logout
 );
 
 
-/* ============================================================
-   DRAG & DROP
-============================================================ */
+username.addEventListener(
+    "keydown",
+    event => {
 
-[
-    "dragenter",
-    "dragover"
-].forEach(eventName => {
-
-    uploadBox.addEventListener(
-        eventName,
-        function(e){
-
-            e.preventDefault();
-            e.stopPropagation();
-
-            uploadBox.classList.add(
-                "dragover"
-            );
-
-        }
-    );
-
-});
-
-
-[
-    "dragleave",
-    "drop"
-].forEach(eventName => {
-
-    uploadBox.addEventListener(
-        eventName,
-        function(e){
-
-            e.preventDefault();
-            e.stopPropagation();
-
-            uploadBox.classList.remove(
-                "dragover"
-            );
-
-        }
-    );
-
-});
-
-
-uploadBox.addEventListener(
-    "drop",
-    async function(e){
-
-        const files =
-            Array.from(
-                e.dataTransfer.files || []
-            );
-
-
-        for(
-            const file of files
+        if(
+            event.key === "Enter"
         ){
 
-            await uploadFile(
-                file
+            login();
+        }
+    }
+);
+
+
+/* =====================================================
+   INITIAL SESSION
+===================================================== */
+
+async function init(){
+
+    try{
+
+        const {
+            data
+        } =
+        await supabaseClient
+            .auth
+            .getSession();
+
+
+        const session =
+            data?.session;
+
+
+        if(
+            session?.user
+        ){
+
+            currentUser =
+                session.user;
+
+
+            const savedName =
+                localStorage.getItem(
+                    "cth_username"
+                )
+                ||
+                "CTH User";
+
+
+            showDashboard(
+                savedName
+            );
+
+
+            await loadFiles();
+
+        }else{
+
+            loginScreen.classList.remove(
+                "hidden"
+            );
+
+            dashboard.classList.add(
+                "hidden"
             );
 
         }
 
 
-        await loadFiles();
+    }catch(error){
+
+        console.error(
+            "INIT ERROR:",
+            error
+        );
 
     }
-);
+
+}
 
 
-/* ============================================================
+/* =====================================================
+   AUTH STATE
+===================================================== */
+
+supabaseClient
+    .auth
+    .onAuthStateChange(
+        (event, session) => {
+
+            if(
+                session?.user
+            ){
+
+                currentUser =
+                    session.user;
+
+            }
+
+        }
+    );
+
+
+/* =====================================================
    START
-============================================================ */
+===================================================== */
 
-checkSession();
+init();
 
 </script>
 
